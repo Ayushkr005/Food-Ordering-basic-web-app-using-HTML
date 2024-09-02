@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AK Food'z</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://th.bing.com/th/id/R.8005e1cddcacf8fff65abdcf93d714e7?rik=DlCM%2fiFri5KsjQ&riu=http%3a%2f%2fwallpapercave.com%2fwp%2f5jtNsi1.jpg&ehk=LzeQUKLjnIAg2YshnGCVx44V27%2fJ2PpKyL3GXIwTkSA%3d&risl=&pid=ImgRaw&r=0');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            background-color: rgba(255, 99, 71, 0.9);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header img {
+            width: 100px;
+            height: 100px;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .options-menu {
+            position: relative;
+        }
+        .options-menu button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 1rem;
+            box-sizing: border-box;
+            text-align: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .search-bar {
+            margin-bottom: 2rem;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .category-section, .restaurant, .cart, .additional-options {
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            text-align: left;
+        }
+        .restaurant h2, .cart h2, .additional-options h2, .category-section h2 {
+            margin-top: 0;
+        }
+        .restaurant-list, .category-list, .additional-options ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .restaurant-list li, .category-list li, .additional-options ul li {
+            cursor: pointer;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .restaurant-list li:hover, .category-list li:hover, .additional-options ul li:hover {
+            background-color: #ff6347;
+            color: white;
+        }
+        .checkout {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .checkout:hover {
+            background-color: #ff4500;
+        }
+        .food-item img {
+            width: 100px;
+            height: 100px;
+            vertical-align: middle;
+        }
+        .food-item li {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://image.makewebeasy.net/makeweb/r_600x0/WILmFqe6f/DefaultData/U111.jpg" alt="Company Logo">
+    <h1>AK Food'z</h1>
+    <div class="options-menu">
+        <button onclick="toggleDropdown()">⋮</button>
+        <div id="dropdown" class="dropdown-content">
+            <a href="special_offers.html">Special Offers</a>
+            <a href="contact_us.html">Contact Us</a>
+            <a href="about_us.html">About Us</a>
+        </div>
+    </div>
+</header>
+
+<div class="container" id="home-page">
+    <div class="search-bar">
+        <input type="text" placeholder="Search for restaurants or food items..." oninput="searchRestaurants(this.value)">
+    </div>
+    <div class="category-section">
+        <h2>Categories</h2>
+        <ul class="category-list">
+            <li onclick="filterCategory('Fast Food')">Fast Food</li>
+            <li onclick="filterCategory('Chinese')">Chinese</li>
+            <li onclick="filterCategory('Mexican')">Mexican</li>
+            <li onclick="filterCategory('Japanese')">Japanese</li>
+            <li onclick="filterCategory('Healthy')">Healthy</li>
+        </ul>
+    </div>
+    <div class="restaurant">
+        <h2>Restaurants</h2>
+        <ul class="restaurant-list" id="restaurant-list">
+            <!-- Restaurant list will be populated by JavaScript -->
+        </ul>
+    </div>
+    <div class="additional-options">
+        <h2>Options</h2>
+        <ul>
+            <li onclick="showOffers()">Special Offers</li>
+            <li onclick="showContactUs()">Contact Us</li>
+            <li onclick="showAboutUs()">About Us</li>
+        </ul>
+    </div>
+</div>
+
+<div class="container" id="food-page" style="display: none;">
+    <div class="food-item">
+        <h2 id="restaurant-name">Food List</h2>
+        <button class="back-button" onclick="showHomePage()">Back</button>
+        <ul id="food-list"></ul>
+    </div>
+
+    <div class="cart">
+        <h2>Cart</h2>
+        <ul id="cart-items"></ul>
+        <p id="total-price">Total: $0</p>
+        <button class="checkout" onclick="proceedToPayment()">Checkout</button>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let totalPrice = 0;
+    let currentCategory = 'All';
+
+    const restaurantData = [
+        { name: 'Restaurant A', category: 'Fast Food' },
+        { name: 'Restaurant B', category: 'Japanese' },
+        { name: 'Restaurant C', category: 'Mexican' },
+        { name: 'Restaurant D', category: 'Chinese' },
+        { name: 'Restaurant E', category: 'Healthy' }
+    ];
+
+    const restaurantFoodItems = {
+        'Restaurant A': [
+            { name: 'Pizza', price: 10, image: 'https://th.bing.com/th/id/OIP.8UeIFPMYwIErE1ShRYB9QAHaEo?rs=1&pid=ImgDetMain', category: 'Fast Food' },
+            { name: 'Burger', price: 8, image: 'https://th.bing.com/th/id/OIP._NqDEls2kB2VAZDgVjzGkQHaFJ?w=1043&h=726&rs=1&pid=ImgDetMain', category: 'Fast Food' },
+            { name: 'Pasta', price: 6, image: 'https://www.foodiecrush.com/wp-content/uploads/2020/05/Penne-Marinara-Sauce-foodiecrush.com-004.jpg', category: 'Fast Food' },
+            { name: 'Hot Dog', price: 5, image: 'https://th.bing.com/th/id/OIP.SJdWEyuZWeUlJA9JNdIgwgHaHa?rs=1&pid=ImgDetMain', category: 'Fast Food' },
+            { name: 'Noodles', price: 8, image: 'https://modernmealmakeover.com/wp-content/uploads/2020/05/thai-noodles-11-3.jpg', category: 'Fast Food' }
+        ],
+        'Restaurant B': [
+            { name: 'Sushi', price: 15, image: 'https://fthmb.tqn.com/LJLRfoSPI_56ihVGr15EBH18yFk=/5096x3418/filters:fill(auto,1)/GettyImages-126553802-56a541cb3df78cf772875a68.jpg', category: 'Japanese' },
+            { name: 'Ramen', price: 12, image: 'https://thehintofrosemary.com/wp-content/uploads/2020/02/ramen-cover-2048x2048.jpg', category: 'Japanese' },
+            { name: 'Tempura', price: 10, image: 'https://japan.recipetineats.com/wp-content/uploads/2016/10/Tempura_2.jpg', category: 'Japanese' }
+        ],
+        'Restaurant C': [
+            { name: 'Tacos', price: 8, image: 'https://www.samtell.com/hs-fs/hubfs/Blogs/Four-Scrumptous-Tacos-Lined-up-with-ingredients-around-them-1.jpg?width=1800&name=Four-Scrumptous-Tacos-Lined-up-with-ingredients-around-them-1.jpg', category: 'Mexican' },
+            { name: 'Burrito', price: 10, image: 'https://www.wikihow.com/images/1/1b/Make-a-Breakfast-Burrito-Final-Version-2.jpg', category: 'Mexican' },
+            { name: 'Nachos', price: 7, image: 'https://www.archanaskitchen.com/images/archanaskitchen/0-Archanas-Kitchen-Recipes/2018/Spicy_Chicken_Nachos_Recipe_With_Salsa_And_Sour_Cream-1.jpg', category: 'Mexican' }
+        ],
+        'Restaurant D': [
+            { name: 'Sweet and Sour Chicken', price: 12, image: 'https://cdn.scrambledchefs.com/wp-content/uploads/2021/01/Sweet-and-Sour-Chicken-1.jpg', category: 'Chinese' },
+            { name: 'Kung Pao Chicken', price: 10, image: 'https://www.onceuponachef.com/images/2018/05/Kung-Pao-Chicken-15-1200x929.jpg', category: 'Chinese' },
+            { name: 'Spring Rolls', price: 5, image: 'https://i1.wp.com/cookingwithlei.com/wp-content/uploads/2020/02/spring-rolls-5.jpg?ssl=1', category: 'Chinese' }
+        ],
+        'Restaurant E': [
+            { name: 'Salad', price: 8, image: 'https://simple-veganista.com/wp-content/uploads/2012/09/healthy-chopped-vegetable-salad-recipe-3.jpg', category: 'Healthy' },
+            { name: 'Grilled Chicken', price: 12, image: 'https://www.onceuponachef.com/images/2020/05/best-grilled-chicken-scaled.jpg', category: 'Healthy' },
+            { name: 'Smoothie', price: 6, image: 'https://deliciouslittlebites.com/wp-content/uploads/2016/06/Mixed-Berry-Smoothie-Recipe-3.jpg', category: 'Healthy' }
+        ]
+    };
+
+    function toggleDropdown() {
+        document.getElementById('dropdown').style.display =
+            document.getElementById('dropdown').style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showOffers() {
+        window.location.href = 'special_offers.html';
+    }
+
+    function showContactUs() {
+        window.location.href = 'contact_us.html';
+    }
+
+    function showAboutUs() {
+        window.location.href = 'about_us.html';
+    }
+
+    function showFoodPage(restaurantName) {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('food-page').style.display = 'block';
+        document.getElementById('restaurant-name').textContent = restaurantName;
+        const foodList = restaurantFoodItems[restaurantName];
+        const foodListElement = document.getElementById('food-list');
+        foodListElement.innerHTML = '';
+        foodList.forEach(food => {
+            const foodItem = document.createElement('li');
+            foodItem.innerHTML = `<img src="${food.image}" alt="${food.name}"> ${food.name} - $${food.price} <button onclick="addToCart('${food.name}', ${food.price})">Add to Cart</button>`;
+            foodListElement.appendChild(foodItem);
+        });
+    }
+
+    function showHomePage() {
+        document.getElementById('home-page').style.display = 'block';
+        document.getElementById('food-page').style.display = 'none';
+    }
+
+    function searchRestaurants(searchTerm) {
+        const filteredRestaurants = restaurantData.filter(restaurant =>
+            restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            restaurant.category.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        displayRestaurants(filteredRestaurants);
+    }
+
+    function filterCategory(category) {
+        currentCategory = category;
+        const filteredRestaurants = restaurantData.filter(restaurant =>
+            category === 'All' || restaurant.category === category
+        );
+        displayRestaurants(filteredRestaurants);
+    }
+
+    function displayRestaurants(restaurants) {
+        const restaurantListElement = document.getElementById('restaurant-list');
+        restaurantListElement.innerHTML = '';
+        restaurants.forEach(restaurant => {
+            const restaurantItem = document.createElement('li');
+            restaurantItem.textContent = restaurant.name;
+            restaurantItem.onclick = () => showFoodPage(restaurant.name);
+            restaurantListElement.appendChild(restaurantItem);
+        });
+    }
+
+    function addToCart(name, price) {
+        cart.push({ name, price });
+        totalPrice += price;
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartItemsElement = document.getElementById('cart-items');
+        cartItemsElement.innerHTML = '';
+        cart.forEach(item => {
+            const cartItem = document.createElement('li');
+            cartItem.textContent = `${item.name} - $${item.price}`;
+            cartItemsElement.appendChild(cartItem);
+        });
+        document.getElementById('total-price').textContent = `Total: $${totalPrice}`;
+    }
+
+    function proceedToPayment() {
+        window.location.href = 'payment.html';
+    }
+
+    // Initial display of restaurants
+    displayRestaurants(restaurantData);
+</script>
+
+</body>
+</html>
